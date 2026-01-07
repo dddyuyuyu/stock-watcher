@@ -44,7 +44,19 @@ def allmd_stock(url):
 def ktown_stock(url):
     r = requests.get(url, headers=HEADERS, timeout=10)
     soup = BeautifulSoup(r.text, "html.parser")
-    return "OUT OF STOCK" not in soup.get_text().upper()
+
+    # 구매 버튼 찾기
+    buy_btn = soup.select_one("button.btn_buy")
+
+    if not buy_btn:
+        return False
+
+    # 버튼이 비활성화되어 있으면 품절
+    if "disabled" in buy_btn.attrs:
+        return False
+
+    return True
+
 
 # =========================
 # Products
@@ -109,3 +121,4 @@ if __name__ == "__main__":
 
     port = int(os.environ.get("PORT", 10000))
     app.run(host="0.0.0.0", port=port)
+
