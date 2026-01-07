@@ -64,15 +64,15 @@ def ktown_stock(url):
 products = [
     (
         "SMTOWN & STORE",
-        "https://smtownandstore.com/product/2025-nct-wish-1st-concert-tour-into-the-wish-our-wish-wish-book-set/27714/category/53/display/1/"
+        "https://smtownandstore.com/product/nct-wish-ever-wish-ring/27800/category/53/display/1/"
     ),
     (
         "ALLMD",
-        "https://allmd.com/product/%EC%97%94%EC%8B%9C%ED%8B%B0-%EC%9C%84%EC%8B%9C-nct-wish-concert-tour-into-the-wish-our-wish-md-%EC%9C%84%EC%8B%9C%EB%B6%81-set/11468/category/657/display/1/"
+        "https://allmd.com/product/%EC%97%94%EC%8B%9C%ED%8B%B0-%EC%9C%84%EC%8B%9C-nct-wish-2026-sm-artist-seasons-greetings-md-%EB%9E%9C%EB%8D%A4-%ED%8A%B8%EB%A0%88%EC%9D%B4%EB%94%A9-%EC%B9%B4%EB%93%9C-set-b-v/12652/category/657/display/1/"
     ),
     (
         "KTOWN4U",
-        "https://kr.ktown4u.com/iteminfo?goods_no=149759"
+        "https://kr.ktown4u.com/iteminfo?goods_no=154491"
     ),
 ]
 
@@ -121,4 +121,5 @@ if __name__ == "__main__":
 
     port = int(os.environ.get("PORT", 10000))
     app.run(host="0.0.0.0", port=port)
+
 
