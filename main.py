@@ -24,20 +24,6 @@ def send_slack(message):
         print("❌ Slack 전송 오류:", e)
 
 # =========================
-# Dummy Web Server (Render Free 유지용)
-# =========================
-app = Flask(__name__)
-
-@app.route("/")
-def home():
-    return "OK"
-
-def run_server():
-    app.run(host="0.0.0.0", port=10000)
-
-Thread(target=run_server, daemon=True).start()
-
-# =========================
 # Stock Check Functions
 # =========================
 HEADERS = {
@@ -77,3 +63,49 @@ products = [
         "https://kr.ktown4u.com/iteminfo?goods_no=149759"
     ),
 ]
+
+checkers = {
+    "SMTOWN & STORE": sm_stock,
+    "ALLMD": allmd_stock,
+    "KTOWN4U": ktown_stock,
+}
+
+# =========================
+# Background Watcher
+# =========================
+def stock_watcher():
+    send_slack("🟢 재고 감시 시작 (슬랙 정상 실행)")
+    last_state = {}
+
+    while True:
+        for name, url in products:
+            try:
+                in_stock = checkers[name](url)
+                was_in_stock = last_state.get(url, False)
+
+                if in_stock and not was_in_stock:
+                    send_slack(
+                        f"🔥 재고 발생!\n[{name}]\n{url}"
+                    )
+
+                last_state[url] = in_stock
+
+            except Exception as e:
+                send_slack(f"⚠️ 오류 발생 ({name})\n{e}")
+
+        time.sleep(300)  # 5분마다 체크
+
+# =========================
+# Flask App (Render용 메인 프로세스)
+# =========================
+app = Flask(__name__)
+
+@app.route("/")
+def home():
+    return "OK"
+
+if __name__ == "__main__":
+    Thread(target=stock_watcher, daemon=True).start()
+
+    port = int(os.environ.get("PORT", 10000))
+    app.run(host="0.0.0.0", port=port)
